@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        th,
+        td {
+            border: 1px solid;
+        }
+
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <p>{{ txt }}</p>
+
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Name</th>
+            <th>Age</th>
+        </tr>
+
+        {%for people in peoples%}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{people.name}}</td>
+            <td>{{people.age}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+    
+
+    <p>
+        {% if "Lion" in animal %}
+            Yes, Lion is here.
+        {% elif "donkey" in animal %} 
+            Yes, here is a donkey.
+        {% else %}
+            No, there is no Lion or donkey.
+        {% endif %}
+    </p>
+    
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Djanog Tutorial 2023</title>
+</head>
+<body>
+    <h1>This is Template is return by Django Server</h1>
+    <h2>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo neque atque vitae officiis. Accusantium tempore iure deserunt cum libero? Expedita dicta in error sint ut minima id nam rem excepturi. </h2>
+    <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam possimus id delectus rerum illum praesentium unde voluptatem doloremque iusto accusantium. Harum saepe itaque magnam accusantium unde sint, in voluptas nihil!</p>
+    <ul id="multiplication-results">
+        <!-- Results will be dynamically added here -->
+    </ul>
+
+    <script>
+        // Function to generate and display multiplication results
+        function displayMultiplicationResults() {
+            var resultsContainer = document.getElementById("multiplication-results");
+
+            // Loop through numbers from 1 to 10 for both factors
+            for (var i = 1; i <= 10; i++) {
+                for (var j = 1; j <= 10; j++) {
+                    var result = i * j;
+
+                    // Create a list item with the multiplication expression and result
+                    var listItem = document.createElement("li");
+                    listItem.textContent = `${i} x ${j} = ${result}`;
+
+                    // Append the list item to the results container
+                    resultsContainer.appendChild(listItem);
+                }
+            }
+        }
+
+        // Call the function to display multiplication results
+        displayMultiplicationResults();
+    </script>
+
+</body>
+</html>
