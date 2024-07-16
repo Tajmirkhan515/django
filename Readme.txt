@@ -148,3 +148,28 @@ Step5: these are the HTML pages.
 
 ==================================RecipePro=================================
 RecipePro app, using djanog
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+In The complete recipe app, I add how to set static url, past the bolow code in the setting.py file
+=> insert recipe
+=> delete recipe
+=> update recipe
+=> search recipe
+=> shows the whole recipes
+
+
+import os
+
+# Assuming BASE_DIR is defined above, like:
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "public/static"),
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "public/static")
+MEDIA_URL = '/media/'
+

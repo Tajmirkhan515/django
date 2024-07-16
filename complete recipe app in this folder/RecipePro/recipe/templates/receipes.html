@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    
+ <div class="container mt-5">
+  <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+   
+    {%csrf_token%}
+
+    <h2>Add Receipe</h2>
+    <hr>
+    <div class="mb-3">
+        <label class="form-label">Receipe Name</label>
+        <input name="reciepe_name"  type="text" class="form-control">
+    </div>
+
+
+    <div class="mb-3">
+
+        <label class="form-label">Receipe Description</label>
+        <input name="reciepe_descr"  type="text" class="form-control">
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">Receipe Image</label>
+        <input name="reciepe_image"  type="file" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Receipe</button>
+  </form>
+ <hr>
+  <div class="mt-5">
+    <div class="mx-auto col-6">
+    <form>
+    <div class="mb-3">
+        
+        <label for="exampleInputEmail" class="form-label">Search Food</lable>
+        <input name="search"  required type="text">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+  
+  </div>
+</form>
+
+  <table class="table  table-bordered mt-5">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Receipe name</th>
+            <th scope="col">Receipe Desc</th>
+            <th scope="col">Image</th>  
+            <th scope="col">Actions</th>      
+        </tr>        
+    </thead>
+    <tbody>
+        {% for receipe in receipes %}
+        <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{receipe.reciepe_name}}</td>
+            <td>{{receipe.reciepe_descr}}</td>
+            <td><img src="/media/{{receipe.reciepe_image}}" style="height:50px;"></td>
+            <td>
+                <a href="/delete_receipe/{{receipe.id}}" class="btn btn-danger"> Delete </a>
+                <a href="/update_receipe/{{receipe.id}}/" class="btn btn-success"> Update </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+ </div>
+
+
+
+</body>
+</html>

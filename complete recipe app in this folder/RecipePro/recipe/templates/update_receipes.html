@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    
+ <div class="container mt-5">
+  <form class="col-6 mx-auto card p-3 shadow-lg" method="post" enctype="multipart/form-data">
+   
+    {%csrf_token%}
+
+    <h2>Update Receipe</h2>
+    <hr>
+    <div class="mb-3">
+        <label class="form-label">Receipe Name</label>
+        <input name="reciepe_name" value="{{receipe.reciepe_name}}" type="text" class="form-control">
+    </div>
+
+
+    <div class="mb-3">
+
+        <label class="form-label">Receipe Description</label>
+        <textarea name="reciepe_descr"  type="text" class="form-control">{{receipe.reciepe_descr}} </textarea>
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">Receipe Image</label>
+        <input name="reciepe_image"  type="file" class="form-control">
+    </div>
+
+    <button type="submit" class="btn btn-success">update btn</button>
+  </form>
+
+ </div>
+
+
+
+</body>
+</html>
