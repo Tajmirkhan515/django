@@ -158,6 +158,7 @@ In The complete recipe app, I add how to set static url, past the bolow code in 
 => shows the whole recipes
 
 
+How set a static url
 import os
 
 # Assuming BASE_DIR is defined above, like:
