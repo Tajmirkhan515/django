@@ -174,3 +174,263 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, "public/static")
 MEDIA_URL = '/media/'
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+In the AuthenticationProject, we design the full registeratin, login page, and hanlde all operations. 
+
+Step 1: define MyApp in INSTALLED_AP list,  in the setting file
+ 	INSTALLED_AP= INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'MyApp',
+]
+
+Step 2: Update the Templates list, with accurate directory of of templates folder
+	TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'MyApp' / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+
+
+Step 3: this is my View.py files, consists of below code. 
+
+from django.shortcuts import render,redirect
+
+# Create your views here.
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
+from django.contrib.auth import login, logout
+
+from .middlewares import auth, guest
+
+
+@guest
+def register_view(request):
+    if request.method=='POST':
+        form=UserCreationForm(request.POST)
+        if form.is_valid():
+            user=form.save()
+            login(request,user)
+            return redirect('dashboard')
+    else:
+        initial_data={'username':'', 'password1': '', 'password2': ''}
+        form=UserCreationForm(initial=initial_data)
+
+    return render(request,'auth/register.html',{'form':form})
+
+@guest
+def login_view(request):
+    if request.method=='POST':
+        form=AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            user=form.get_user()
+            login(request,user)
+            return redirect('dashboard')
+    else:
+        initial_data={'username':'', 'password1': ''}
+        form=AuthenticationForm(initial=initial_data)
+
+    return render(request,'auth/login.html',{'form':form})
+
+
+@auth
+def dashboard_view(request):
+    return render(request,'dashboard.html')
+
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+Stpe 3: update the url.py file
+
+ 
+urlpatterns = [
+   # path('', admin.site.urls),
+    path('register/', register_view, name='register'), # type: ignore
+    path('login/', login_view, name='login'), # type: ignore
+    path('logout/', logout_view, name='logout'), # type: ignore
+    path('dashboard/', dashboard_view, name='dashboard'), # type: ignore    
+]
+
+
+Step 4: update teh models.py files
+  # Create your models here.
+
+from django.contrib.auth.models import User
+
+
+Step 5: i created the template files, with a following herarichy 
+
+        templates/
+           auth/
+              login.html/
+              register.html/
+           layouts/
+              app.html
+        /dashboard.html
+
+Step 6: apply the following comands
+    python manage.py makemigrations
+    python manage.py migrate
+
+
+Step 7: The following html codes. 
+     layouts/app.html
+
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Django Auth</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body style="padding: 10%;">
+
+{% block content %}
+
+{% endblock %}
+
+</body>
+</html>
+
+***************login*******************
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+
+
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <h2 class="text-muted">Login</h2>
+
+        {% if form.non_field_errors %}
+
+        <small class="text-danger">
+         {{form.non_field_errors.as_ul}}
+        </small>
+      {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+             {%csrf_token%}
+             <div class="form-group">
+                <label for="{{form.username.id_for_label}}">Username</label>
+                <input type="text" name="{{form.username.name}}" class="form-control" value="{{form.username.value}}">
+                <span class="text-danger">{{form.username.errors}}</span>
+             </div>
+            
+
+             <div class="form-group">
+                <label for="{{form.password.id_for_label}}">password</label>
+                <input type="text" name="{{form.password.name}}" class="form-control" value="{{form.password.value}}">
+                <span class="text-danger">{{form.password.errors}}</span>
+             </div>
+            
+
+
+             
+            
+           <button type="submit" class="btn btn-dark">Login</button>
+           <a href="{% url 'register' %}" class="btn btn-default">Create a new account</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+*************registeration********************
+{% extends 'layouts/app.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-sm-6">
+        <h2 class="text-muted">Register</h2>
+        <form method="POST" action="{% url 'register' %}">
+             {%csrf_token%}
+             <div class="form-group">
+                <label for="{{form.username.id_for_label}}">Username</label>
+                <input type="text" name="{{form.username.name}}" class="form-control" value="{{form.username.value}}">
+                <span class="text-danger">{{form.username.errors}}</span>
+             </div>
+            
+
+             <div class="form-group">
+                <label for="{{form.password1.id_for_label}}">Password1</label>
+                <input type="text" name="{{form.password1.name}}" class="form-control" value="{{form.password1.value}}">
+                <span class="text-danger">{{form.password1.errors}}</span>
+             </div>
+            
+
+
+             <div class="form-group">
+                <label for="{{form.password2.id_for_label}}">Re-Type Password: </label>
+                <input type="text" name="{{form.password2.name}}" class="form-control" value="{{form.password2.value}}">
+                <span class="text-danger">{{form.password2.errors}}</span>
+             </div>
+            
+           <button type="submit" class="btn btn-dark">Submit</button>
+           <a href="{% url 'login' %}" class="btn btn-default">Login</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+
+****************dashboard.py***************
+
+
+{% extends 'layouts/app.html' %}
+
+
+{% block content %}
+
+    <h2> Dashboard : {{request.user.username}}</h2>
+    <a href="{% url 'logout' %}" class="btn btn-dark">log out</a>
+
+
+{% endblock %}
+
+
+step 8: middlewares.py, this is very important code.
+
+from django.shortcuts import redirect
+
+def auth(view_function):
+    def wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated==False:
+            return redirect('login')
+        return view_function(request,*args,**kwargs)
+    return wrapped_view
+
+
+
+#*********Guest user**************
+def guest(view_function):
+    def wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return view_function(request,*args,**kwargs)
+    return wrapped_view
